@@ -82,9 +82,9 @@ export default {
           userInfo.has_photo && userInfo.photo_200_orig
             ? userInfo.photo_200_orig
             : DEFAULT_IMAGE_URL,
-        freindsCount: userInfo.counters.friends,
-        followersCount: userInfo.counters.followers,
-        groupCount: userInfo.counters.groups ? userInfo.counters.groups : '?'
+        freindsCount: userInfo.counters ? userInfo.counters.friends : '?',
+        followersCount:  userInfo.counters ? userInfo.counters.followers : '?',
+        groupCount: userInfo.counters && userInfo.counters.groups ? userInfo.counters.groups : '?'
       };
     }
   }
