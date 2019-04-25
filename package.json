@@ -1,5 +1,7 @@
 {
   "name": "mini-vk-page",
+  "description": "Mini version of VK page",
+  "author": "Elisabeth Shevtsova",
   "version": "0.1.0",
   "private": true,
   "scripts": {
