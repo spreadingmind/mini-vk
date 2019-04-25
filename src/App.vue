@@ -26,9 +26,8 @@
 <script>
 import Friends from "./components/Friends.vue";
 import Info from "./components/Info.vue";
-import { EventBus, NEW_PERSON_EVENT } from "./eventBus";
-
-const VK_API_VERSION = "5.73";
+import { EventBus, NEW_PERSON_EVENT, USER_NOT_FOUND_EVENT, EMPTY_INPUT_EVENT } from "./eventBus";
+import { VK_API_VERSION } from "./constants";
 
 export default {
   name: "app",
@@ -47,17 +46,23 @@ export default {
   methods: {
     searchPerson() {
       let self = this;
-      VK.api(
+      if (!this.person) {
+        EventBus.$emit(EMPTY_INPUT_EVENT);
+        return;
+      }
+      return VK.api(
         "users.search",
         { q: this.person, sort: 0, v: VK_API_VERSION },
         function(res) {
-          if (res.count === 0) {
-            self.errorMessage = "User not found";
+          if (res.response.count === 0) {
+            EventBus.$emit(USER_NOT_FOUND_EVENT, self.person);
+            return;
           }
           if (res.response) {
             // just taking first most popular person
             self.personId = res.response.items[0].id;
             EventBus.$emit(NEW_PERSON_EVENT, self.personId);
+            return;
           }
         }
       );
@@ -137,5 +142,7 @@ input[type="text"]:focus {
 }
 
 .tab {
+  margin: auto;
+  padding: 50px;
 }
 </style>
