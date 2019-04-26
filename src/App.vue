@@ -1,18 +1,26 @@
 <template>
   <div id="app">
     <div id="logo">
-      <img alt="VK logo" src="./assets/vk_logo.png" width="100" height="100">
+      <a href="https://mini-vk.herokuapp.com/">
+        <img alt="VK logo" src="./assets/vk_logo.png" width="100" height="100">
+      </a>
       <span id="caption" style>mini version</span>
     </div>
-    <input
-      type="text"
-      name="search"
-      v-model="person"
-      placeholder="Search person.."
-      v-on:keyup.enter="searchPerson"
-    >
-    <div id="pageTabs">
+    <div class="wrap">
+      <div class="search">
+        <input
+          id="search-field"
+          type="text"
+          name="search"
+          v-model="person"
+          v-on:keyup.enter="searchPerson"
+          placeholder="Search person.."
+        >
+      </div>
+    </div>
+    <div id="page-tabs">
       <button
+        id = 'tab-button'
         v-for="tab in tabs"
         :key="tab"
         @click="selected = tab;"
@@ -26,7 +34,12 @@
 <script>
 import Friends from "./components/Friends.vue";
 import Info from "./components/Info.vue";
-import { EventBus, NEW_PERSON_EVENT, USER_NOT_FOUND_EVENT, EMPTY_INPUT_EVENT } from "./eventBus";
+import {
+  EventBus,
+  NEW_PERSON_EVENT,
+  USER_NOT_FOUND_EVENT,
+  EMPTY_INPUT_EVENT
+} from "./eventBus";
 import { VK_API_VERSION } from "./constants";
 
 export default {
@@ -54,6 +67,10 @@ export default {
         "users.search",
         { q: this.person, sort: 0, v: VK_API_VERSION },
         function(res) {
+          if (!res.response) {
+            EventBus.$emit(USER_NOT_FOUND_EVENT, self.person);
+            return;
+          }
           if (res.response.count === 0) {
             EventBus.$emit(USER_NOT_FOUND_EVENT, self.person);
             return;
@@ -116,12 +133,11 @@ input[type="text"] {
   background-position: 10px 10px;
   background-repeat: no-repeat;
   padding: 12px 20px 12px 40px;
-  -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
 }
 
 input[type="text"]:focus {
-  width: 90%;
+  width: 70%;
 }
 
 .tab-btn {

@@ -56,6 +56,9 @@ export default {
             fields: PROFILE_FIELDS
           },
           function(res) {
+            if (!res.response) {
+              return;
+            }
             if (res.response.length) {
               const userInfo = res.response[0];
               self.userInfo = self.parseInfo(userInfo);
